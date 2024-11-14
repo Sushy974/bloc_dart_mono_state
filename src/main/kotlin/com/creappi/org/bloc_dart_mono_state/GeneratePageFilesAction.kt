@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import java.io.IOException
+import java.util.Locale
 
 class GeneratePageFilesAction(private val inputName: String? = null) : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
@@ -46,7 +47,7 @@ class GeneratePageFilesAction(private val inputName: String? = null) : AnAction(
         val fileNames = arrayOf("${snakeCaseText}_page.dart", "${snakeCaseText}_view.dart")
         val fileContents = arrayOf(
             generatePageContent(camelCaseText, snakeCaseText),
-            generateViewContent(camelCaseText)
+            generateViewContent(camelCaseText, snakeCaseText)
         )
 
         for (i in fileNames.indices) {
@@ -60,11 +61,20 @@ class GeneratePageFilesAction(private val inputName: String? = null) : AnAction(
     }
 
     private fun toSnakeCase(input: String): String = input.lowercase().replace(" ", "_")
-    private fun toCamelCase(input: String): String = input.split(" ").joinToString("") { it.capitalize() }
+    private fun toCamelCase(input: String): String = input.split(" ").joinToString("") { it ->
+        it.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }
+    }
 
     private fun generatePageContent(className: String, snakeCaseName: String): String {
         return """
             import 'package:flutter/material.dart';
+            import 'package:flutter_bloc/flutter_bloc.dart';
+
+            import '../bloc/${snakeCaseName}_bloc.dart';
             import '${snakeCaseName}_view.dart';
 
             class ${className}Page extends StatelessWidget {
@@ -82,22 +92,32 @@ class GeneratePageFilesAction(private val inputName: String? = null) : AnAction(
 
               @override
               Widget build(BuildContext context) {
-                return const ${className}View();
+                return BlocProvider(
+                  create: (BuildContext context) => ${className}Bloc(),
+                  child: const ${className}View(),
+                );
               }
             }
         """.trimIndent()
     }
 
-    private fun generateViewContent(className: String): String {
+    private fun generateViewContent(className: String, snakeCaseName: String): String {
         return """
             import 'package:flutter/material.dart';
+            import 'package:flutter_bloc/flutter_bloc.dart';
+
+            import '../bloc/${snakeCaseName}_bloc.dart';
 
             class ${className}View extends StatelessWidget {
               const ${className}View({super.key});
 
               @override
               Widget build(BuildContext context) {
-                return Container();
+                return BlocBuilder<${className}Bloc, ${className}State>(
+                  builder: (context, state) {
+                    return Container();
+                  },
+                );
               }
             }
         """.trimIndent()

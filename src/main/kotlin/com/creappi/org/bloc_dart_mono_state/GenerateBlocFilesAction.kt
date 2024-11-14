@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import java.io.IOException
+import java.util.Locale
 
 class GenerateBlocFilesAction(private val inputName: String? = null) : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
@@ -61,7 +62,13 @@ class GenerateBlocFilesAction(private val inputName: String? = null) : AnAction(
     }
 
     private fun toSnakeCase(input: String): String = input.lowercase().replace(" ", "_")
-    private fun toCamelCase(input: String): String = input.split(" ").joinToString("") { it.capitalize() }
+    private fun toCamelCase(input: String): String = input.split(" ").joinToString("") { it ->
+        it.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }
+    }
 
     private fun generateBlocContent(className: String): String {
         return """
@@ -70,8 +77,8 @@ class GenerateBlocFilesAction(private val inputName: String? = null) : AnAction(
             import 'package:bloc/bloc.dart';
             import 'package:equatable/equatable.dart';
 
-            part '${className.toLowerCase()}_event.dart';
-            part '${className.toLowerCase()}_state.dart';
+            part '${className.lowercase(Locale.getDefault())}_event.dart';
+            part '${className.lowercase(Locale.getDefault())}_state.dart';
 
             class ${className}Bloc extends Bloc<${className}Event, ${className}State> {
               ${className}Bloc() : super(const ${className}State()) {
@@ -88,7 +95,7 @@ class GenerateBlocFilesAction(private val inputName: String? = null) : AnAction(
 
     private fun generateEventContent(className: String): String {
         return """
-            part of '${className.toLowerCase()}_bloc.dart';
+            part of '${className.lowercase(Locale.getDefault())}_bloc.dart';
 
             sealed class ${className}Event extends Equatable {
               const ${className}Event();
@@ -104,7 +111,7 @@ class GenerateBlocFilesAction(private val inputName: String? = null) : AnAction(
 
     private fun generateStateContent(className: String): String {
         return """
-            part of '${className.toLowerCase()}_bloc.dart';
+            part of '${className.lowercase(Locale.getDefault())}_bloc.dart';
 
             class ${className}State extends Equatable {
               const ${className}State();

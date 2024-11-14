@@ -1,30 +1,36 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
+  <icon>pluginIcon.png</icon>
+  <icon size="512">pluginIcon512.png</icon>
   <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
   <id>com.creappi.org.bloc_dart_mono_state.bloc_dart_mono_state</id>
 
   <!-- Public plugin name should be written in Title Case.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-  <name>Bloc_dart_mono_state</name>
+  <name>Generate BLoC Dart Mono State and Page Stateless</name>
+  <version>1.0.1</version>
 
   <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-  <vendor email="contact@creapp-i.com" url="https://www.yourcompany.com">Creapp-i</vendor>
+  <vendor email="contact@creapp-i.com" url="https://www.creapp-i.com/">Creapp-i</vendor>
   <actions>
     <action
         id="com.creappi.org.bloc_dart_mono_state.GenerateBlocFiles"
         class="com.creappi.org.bloc_dart_mono_state.GenerateBlocFilesAction"
+        icon="AllIcons.Nodes.AbstractClass"
         text="Generate BLoC Files">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
     </action>
     <action
         id="com.creappi.org.bloc_dart_mono_state.GeneratePageFilesAction"
         class="com.creappi.org.bloc_dart_mono_state.GeneratePageFilesAction"
+        icon="AllIcons.Nodes.JavaDocFolder"
         text="Generate Page Files">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
     </action>
     <action
         id="com.creappi.org.bloc_dart_mono_state.GenerateCombinedFilesAction"
         class="com.creappi.org.bloc_dart_mono_state.GenerateCombinedFilesAction"
+        icon="AllIcons.Nodes.CopyOfFolder"
         text="Generate Combined Files">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
     </action>
@@ -35,9 +41,20 @@
        Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
        Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
   <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-  ]]></description>
+    <strong>Mono-State BLoC and Page/View Generator</strong><br><br>
+    This plugin simplifies the setup of mono-state BLoC architecture and page/view structures within Flutter projects. With a few clicks, it automatically generates the necessary BLoC files (<code>bloc</code>, <code>event</code>, <code>state</code>) as well as pre-configured <code>page</code> and <code>view</code> files designed to work seamlessly with the BLoC.<br><br>
+
+    <strong>Features</strong><br>
+    <ul>
+        <li><strong>Generate BLoC Files</strong>: Quickly create mono-state BLoC files (<code>bloc</code>, <code>event</code>, and <code>state</code>) based on a specified name, ready to handle state management.</li>
+        <li><strong>Generate Page and View Files</strong>: Set up Flutter <code>page</code> and <code>view</code> files that are pre-configured with <code>BlocProvider</code> and <code>BlocBuilder</code>, ensuring efficient state handling and UI structure.</li>
+        <li><strong>Combined Generator</strong>: Use a single command to generate a full folder structure, including both BLoC and page/view files, neatly organized and ready for use.</li>
+    </ul>
+
+    This plugin is ideal for Flutter developers looking to streamline their project setup and maintain a clean, organized structure.
+]]></description>
+
+
 
   <!-- Product and plugin compatibility requirements.
        Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -48,4 +65,5 @@
   <extensions defaultExtensionNs="com.intellij">
 
   </extensions>
+
 </idea-plugin>
